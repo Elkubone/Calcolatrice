@@ -35,12 +35,37 @@ header button{background:none;border:1px solid var(--fn);color:var(--fnt);border
 #hl small{display:block;color:var(--dim);font-size:15px}
 #hl b{font-weight:400;font-size:22px;color:var(--eq)}
 #hl p{color:var(--dim);text-align:center;margin-top:40px}
+#calc{flex:1;display:flex;flex-direction:column;min-height:0}
+.tabs{display:flex;gap:4px}
+header .tabs button{border:0;background:var(--num);padding:7px 14px}
+header .tabs button.on{background:var(--eq);color:#2a1d00}
+#gr{display:none;flex:1;flex-direction:column;min-height:0;gap:8px;padding-top:8px}
+#gr.show{display:flex}
+.cw{position:relative;flex:1;min-height:120px}
+#cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;border-radius:14px;background:#14122a}
+.zb{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:6px}
+.zb button{width:36px;height:36px;border:0;border-radius:10px;background:var(--fn);color:var(--fnt);font-size:18px;padding:0}
+#rd{font-size:14px;color:var(--dim);min-height:1.3em;overflow-x:auto;white-space:nowrap}
+.fr{display:flex;align-items:center;gap:8px}
+.fr i{width:12px;height:12px;border-radius:6px;flex:none}
+.fr input{flex:1;min-width:0;background:var(--num);color:var(--txt);border:1px solid transparent;border-radius:10px;padding:9px 10px;font-size:17px;font-family:inherit}
+.fr input:focus{outline:0;border-color:var(--op)}
+#qk{display:flex;gap:6px;overflow-x:auto}
+#qk button{flex:none;border:0;border-radius:10px;background:var(--fn);color:var(--fnt);padding:9px 12px;font-size:16px;font-family:inherit}
 </style>
 </head>
 <body>
-<header><span id="mode">Gradi</span><button id="hb">Cronologia</button></header>
+<header><span class="tabs"><button id="t1" class="on">Calcola</button><button id="t2">Grafico</button></span><span id="mode">Gradi</span><button id="hb">Cronologia</button></header>
+<div id="calc">
 <div class="screen"><div id="ex"></div><div id="rs" class="dim">0</div></div>
 <div class="keys" id="keys"></div>
+</div>
+<div id="gr">
+<div class="cw"><canvas id="cv"></canvas><div class="zb"><button id="zi">+</button><button id="zo">−</button><button id="zr">⌂</button></div></div>
+<div id="rd">Tocca il grafico per leggere i valori</div>
+<div id="qk"></div>
+<div id="fi"></div>
+</div>
 <div id="hp"><div class="bar"><b>Cronologia</b><span><button class="t" id="hc">Svuota</button> <button class="t" id="hx">Chiudi</button></span></div><div id="hl"></div></div>
 <script>
 let expr='',deg=true,second=false,ans=0,lastRes='0',hist=[];
@@ -120,9 +145,11 @@ function tok(s){
     if(c==='π'){t.push({n:Math.PI});i++;continue}
     if(c==='√'){t.push({f:'sqrt'});i++;continue}
     if(c==='∛'){t.push({f:'cbrt'});i++;continue}
-    const m=s.slice(i).match(/^(asin|acos|atan|sin|cos|tan|ln|log|abs|nCr|nPr|Ans|e)/);
+    if(c==='x'||c==='X'){t.push({x:1});i++;continue}
+    const m=s.slice(i).match(/^(asin|acos|atan|sin|sen|cos|tan|tg|ln|log|abs|nCr|nPr|Ans|pi|e)/);
     if(!m)throw 0;
-    if(m[1]==='e')t.push({n:Math.E});else if(m[1]==='Ans')t.push({n:ans});else t.push({f:m[1]});
+    const AL={sen:'sin',tg:'tan'};
+    if(m[1]==='e')t.push({n:Math.E});else if(m[1]==='pi')t.push({n:Math.PI});else if(m[1]==='Ans')t.push({n:ans});else t.push({f:AL[m[1]]||m[1]});
     i+=m[1].length;
   }
   return t;
@@ -154,15 +181,16 @@ function fn(f,a){
   }
   throw 0;
 }
-function evaluate(s){
-  const t=tok(s);let p=0;
+function evaluate(s,X){return run(tok(s),X)}
+function run(t,X){
+  let p=0;
   const nx=()=>t[p++],isO=o=>t[p]&&t[p].o===o;
   function expr(){let v=term();while(isO('+')||isO('-')){const o=nx().o,r=term();v=o==='+'?v+r:v-r}return v}
   function term(){
     let v=un();
     for(;;){
       if(isO('*')||isO('/')){const o=nx().o,r=un();v=o==='*'?v*r:v/r}
-      else if(t[p]&&(t[p].n!==undefined||t[p].f||isO('('))){v*=un()}
+      else if(t[p]&&(t[p].n!==undefined||t[p].f||t[p].x||isO('('))){v*=un()}
       else break;
     }
     return v;
@@ -174,6 +202,7 @@ function evaluate(s){
   function pr(){
     const k=nx();if(!k)throw 0;
     if(k.n!==undefined)return k.n;
+    if(k.x)return X;
     if(k.o==='('){const v=expr();close();return v}
     if(k.f){if(!isO('('))throw 0;p++;const a=[expr()];while(isO(',')){p++;a.push(expr())}close();return fn(k.f,a)}
     throw 0;
@@ -194,6 +223,78 @@ function showHist(){
 $('#hb').onclick=showHist;
 $('#hx').onclick=()=>$('#hp').classList.remove('show');
 $('#hc').onclick=()=>{hist=[];save();showHist()};
+
+// grafico
+const cv=$('#cv'),g=cv.getContext('2d'),COL=['#ffb454','#6ee7b7','#ff6f91'];
+let vw={x:0,y:0,s:40},tx=null,lf=0,T=[null,null,null];
+let saved=['sin(x)','x^2/4-1',''];
+try{const q=JSON.parse(localStorage.getItem('calc-g'));if(Array.isArray(q)&&q.length===3)saved=q}catch(e){}
+const I=[0,1,2].map(i=>{const r=document.createElement('div');r.className='fr';r.innerHTML='<i></i><input autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="f'+(i+1)+'(x)">';r.firstChild.style.background=COL[i];$('#fi').appendChild(r);
+  const el=r.lastChild;el.value=saved[i];el.onfocus=()=>lf=i;el.oninput=inp;return el});
+['x','^','(',')','π','√(','abs(','sin(','cos(','tan(','ln(','log(','e'].forEach(t=>{const b=document.createElement('button');b.textContent=t==='abs('?'|x|':t;b.onmousedown=e=>e.preventDefault();b.onclick=()=>ins(t);$('#qk').appendChild(b)});
+function ins(t){const el=I[lf],a=el.selectionStart==null?el.value.length:el.selectionStart,b=el.selectionEnd==null?a:el.selectionEnd;el.value=el.value.slice(0,a)+t+el.value.slice(b);el.setSelectionRange(a+t.length,a+t.length);el.focus();inp()}
+function inp(){
+  I.forEach((el,i)=>{let ok=true;T[i]=null;if(el.value.trim()){try{T[i]=tok(el.value)}catch(e){ok=false}}el.style.borderColor=ok?'':'var(--ac)'});
+  try{localStorage.setItem('calc-g',JSON.stringify(I.map(e=>e.value)))}catch(e){}
+  draw();
+}
+function ev(i,x){try{const y=run(T[i],x);return isFinite(y)?y:null}catch(e){return null}}
+function size(){const r=cv.getBoundingClientRect(),d=devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;g.setTransform(d,0,0,d,0,0);draw()}
+const W=()=>cv.clientWidth,H=()=>cv.clientHeight;
+const sx=x=>W()/2+(x-vw.x)*vw.s,sy=y=>H()/2-(y-vw.y)*vw.s,ix=p=>(p-W()/2)/vw.s+vw.x,iy=p=>vw.y-(p-H()/2)/vw.s;
+const nf=v=>String(Number(v.toPrecision(6)));
+function draw(){
+  const w=W(),h=H();if(!w)return;
+  g.clearRect(0,0,w,h);
+  const raw=70/vw.s,mg=Math.pow(10,Math.floor(Math.log10(raw)));
+  const st=[1,2,5,10].map(m=>m*mg).find(v=>v>=raw);
+  const ax=Math.min(Math.max(sx(0),0),w),ay=Math.min(Math.max(sy(0),0),h);
+  g.font='11px Roboto,sans-serif';g.lineWidth=1;
+  for(let v=Math.ceil(ix(0)/st)*st;v<=ix(w);v+=st){const p=Math.round(sx(v))+.5;g.strokeStyle='#2a2748';g.beginPath();g.moveTo(p,0);g.lineTo(p,h);g.stroke();
+    if(Math.abs(v)>st/2){g.fillStyle='#9a94c9';g.textAlign='center';g.fillText(nf(v),p,Math.min(Math.max(ay+13,12),h-3))}}
+  for(let v=Math.ceil(iy(h)/st)*st;v<=iy(0);v+=st){const p=Math.round(sy(v))+.5;g.strokeStyle='#2a2748';g.beginPath();g.moveTo(0,p);g.lineTo(w,p);g.stroke();
+    if(Math.abs(v)>st/2){g.fillStyle='#9a94c9';g.textAlign=ax>34?'right':'left';g.fillText(nf(v),ax>34?ax-4:ax+4,p+4)}}
+  g.strokeStyle='#9a94c9';g.beginPath();g.moveTo(Math.round(ax)+.5,0);g.lineTo(Math.round(ax)+.5,h);g.moveTo(0,Math.round(ay)+.5);g.lineTo(w,Math.round(ay)+.5);g.stroke();
+  g.lineWidth=2.2;g.lineJoin='round';
+  T.forEach((t,i)=>{
+    if(!t)return;g.strokeStyle=COL[i];g.beginPath();let pv=null;
+    for(let px=0;px<=w;px++){const y=ev(i,ix(px));const py=y===null?null:sy(y);
+      if(py===null||Math.abs(py)>1e5){pv=null;continue}
+      if(pv===null||Math.abs(py-pv)>4*h)g.moveTo(px,py);else g.lineTo(px,py);pv=py}
+    g.stroke()});
+  const rd=$('#rd');
+  if(tx===null){rd.textContent='Tocca il grafico per leggere i valori';return}
+  g.lineWidth=1;g.strokeStyle='#f4f1ff';g.setLineDash([4,4]);g.beginPath();g.moveTo(sx(tx),0);g.lineTo(sx(tx),h);g.stroke();g.setLineDash([]);
+  let o='x = '+nf(tx);
+  T.forEach((t,i)=>{if(!t)return;const y=ev(i,tx);o+='   y'+(i+1)+' = '+(y===null?'—':nf(y));
+    if(y!==null){g.fillStyle=COL[i];g.beginPath();g.arc(sx(tx),sy(y),5,0,7);g.fill()}});
+  rd.textContent=o;
+}
+function zoom(f,m){const x0=ix(m.x),y0=iy(m.y);vw.s=Math.min(Math.max(vw.s*f,0.5),1e5);vw.x=x0-(m.x-W()/2)/vw.s;vw.y=y0+(m.y-H()/2)/vw.s}
+const P=new Map();let d0=0,mv=0;
+const pd=()=>{if(P.size<2)return 0;const [a,b]=[...P.values()];return Math.hypot(a.x-b.x,a.y-b.y)};
+const md=()=>{const [a,b]=[...P.values()];return{x:(a.x+b.x)/2,y:(a.y+b.y)/2}};
+cv.onpointerdown=e=>{cv.setPointerCapture(e.pointerId);P.set(e.pointerId,{x:e.offsetX,y:e.offsetY});mv=0;d0=pd()};
+cv.onpointermove=e=>{
+  if(!P.has(e.pointerId))return;
+  const o=P.get(e.pointerId),n={x:e.offsetX,y:e.offsetY};
+  if(P.size===1){vw.x-=(n.x-o.x)/vw.s;vw.y+=(n.y-o.y)/vw.s;mv+=Math.abs(n.x-o.x)+Math.abs(n.y-o.y)}
+  P.set(e.pointerId,n);
+  if(P.size===2){const d=pd();if(d0)zoom(d/d0,md());d0=d;mv=99}
+  draw()};
+cv.onpointerup=cv.onpointercancel=e=>{if(P.size===1&&mv<8&&P.has(e.pointerId))tx=ix(P.get(e.pointerId).x);P.delete(e.pointerId);d0=0;draw()};
+cv.onwheel=e=>{e.preventDefault();zoom(e.deltaY<0?1.15:1/1.15,{x:e.offsetX,y:e.offsetY});draw()};
+$('#zi').onclick=()=>{zoom(1.4,{x:W()/2,y:H()/2});draw()};
+$('#zo').onclick=()=>{zoom(1/1.4,{x:W()/2,y:H()/2});draw()};
+$('#zr').onclick=()=>{vw={x:0,y:0,s:40};tx=null;draw()};
+addEventListener('resize',()=>{if($('#gr').classList.contains('show'))size()});
+function tab(gr){
+  $('#gr').classList.toggle('show',gr);$('#calc').style.display=gr?'none':'flex';
+  $('#t1').classList.toggle('on',!gr);$('#t2').classList.toggle('on',gr);
+  $('#hb').style.visibility=$('#mode').style.visibility=gr?'hidden':'';
+  if(gr){inp();size()}
+}
+$('#t1').onclick=()=>tab(false);$('#t2').onclick=()=>tab(true);
 
 paint();upd();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
