@@ -74,33 +74,64 @@ nav.tabs button.on{background:var(--eq);color:#2a1d00}
 #ek{background:var(--bg);border:1px solid var(--fn);border-radius:18px;padding:18px;width:100%;max-width:400px;max-height:92dvh;overflow:auto}
 .eh{display:flex;align-items:center;gap:14px;margin-bottom:10px;font-size:24px}.eh div{color:#14122a;border-radius:12px;width:68px;height:68px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700}
 #ek .bt{margin-top:14px;width:100%}
+#fi{overflow-y:auto;max-height:24dvh;flex:none;display:flex;flex-direction:column;gap:8px}
+.fr input.cp{flex:none;width:34px;height:34px;padding:0;border:0;border-radius:50%;background:none;-webkit-appearance:none;appearance:none}
+.cp::-webkit-color-swatch-wrapper{padding:0}.cp::-webkit-color-swatch{border:2px solid var(--txt);border-radius:50%}
+.rm{flex:none;border:0;background:var(--fn);color:var(--fnt);width:34px;height:34px;border-radius:10px;font-size:18px;padding:0}
+#af{flex:none}
+#eg{grid-template-columns:repeat(18,46px);grid-template-rows:repeat(7,46px) 14px repeat(2,46px);gap:4px}
+#eg button{position:relative;border-radius:9px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.2)}#eg b{font-size:17px}
+.z,.a{position:absolute;left:4px;font-size:9px;font-weight:600;font-style:normal;opacity:.75}.z{top:3px}.a{bottom:3px}
+.eh div{position:relative}.eh .z,.eh .a{font-size:12px;left:6px}.eh .z{top:5px}.eh .a{bottom:5px}.eh div b{font-size:32px}
+#cn{display:none;flex:1;min-height:0;overflow:auto;padding-top:8px}#cn.show{display:block}
+#cc{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px}#cc button{flex:none;border:0;border-radius:16px;background:var(--num);color:var(--fnt);padding:8px 14px;font-size:14px;font-family:inherit}#cc button.on{background:var(--eq);color:#2a1d00}
+#cvv{width:100%;background:var(--num);color:var(--txt);border:0;border-radius:12px;padding:14px;font-size:28px;font-family:inherit;margin-bottom:10px}
+.cr2{display:flex;gap:8px;align-items:center}.cr2 select{flex:1;min-width:0;background:var(--num);color:var(--txt);border:0;border-radius:10px;padding:12px;font-size:17px;font-family:inherit}
+#cr{font-size:36px;font-weight:300;color:var(--eq);margin:16px 0 6px;word-break:break-all}
 </style>
 </head>
 <body>
 <nav class="tabs" id="nv"></nav>
-<header><span id="mode">Gradi</span><button id="hb">Cronologia</button></header>
+<header><span id="mode"></span><span><button id="lb">FR</button> <button id="hb" data-i="hist"></button></span></header>
 <div id="calc">
 <div class="screen"><div id="ex"></div><div id="rs" class="dim">0</div></div>
 <div class="keys" id="keys"></div>
 </div>
 <div id="gr">
-<div class="sg"><button id="g1" class="on">Grafico</button><button id="g2">Tabella</button></div>
+<div class="sg"><button id="g1" class="on" data-i="g1"></button><button id="g2" data-i="g2"></button></div>
 <div class="cw"><canvas id="cv"></canvas><div class="zb"><button id="zi">+</button><button id="zo">−</button><button id="zr">⌂</button></div></div>
 <div id="rd">Tocca il grafico per leggere i valori</div>
 <div id="qk"></div>
-<div id="tb"><div class="tr">Da x = <input id="t0" type="number" step="any" value="-3"> passo <input id="ts" type="number" step="any" value="1"></div><div id="tt"></div></div>
+<div id="tb"><div class="tr"><span data-i="from"></span> <input id="t0" type="number" step="any" value="-3"> <span data-i="step"></span> <input id="ts" type="number" step="any" value="1"></div><div id="tt"></div></div>
 <div id="fi"></div>
+<button id="af" class="bt" data-i="addf"></button>
 </div>
-<div id="st"><table class="dt" id="sd"><thead><tr><th>Valeur x<sub>i</sub></th><th>Effectif n<sub>i</sub></th></tr></thead><tbody></tbody></table>
-<div class="row"><button id="sa">+ Ligne</button><button id="sr">Effacer</button></div><canvas id="sv"></canvas><div id="ss"></div></div>
+<div id="st"><table class="dt" id="sd"><thead><tr><th data-i="colv"></th><th data-i="coln"></th></tr></thead><tbody></tbody></table>
+<div class="row"><button id="sa" data-i="add"></button><button id="sr" data-i="clr"></button></div><canvas id="sv"></canvas><div id="ss"></div></div>
 <div id="el"><div id="eg"></div><div id="lg"></div></div>
+<div id="cn"><div id="cc"></div><input id="cvv" inputmode="decimal" autocomplete="off" value="1">
+<div class="cr2"><select id="cfa"></select><button id="csw" class="bt">⇅</button><select id="cft"></select></div>
+<div id="cr"></div><div class="nt" id="cnt"></div><button id="cup" class="bt" data-i="cup"></button></div>
 <div id="ec"><div id="ek"></div></div>
-<div id="hp"><div class="bar"><b>Cronologia</b><span><button class="t" id="hc">Svuota</button> <button class="t" id="hx">Chiudi</button></span></div><div id="hl"></div></div>
+<div id="hp"><div class="bar"><b data-i="hist"></b><span><button class="t" id="hc" data-i="clr2"></button> <button class="t" id="hx" data-i="close"></button></span></div><div id="hl"></div></div>
 <script>
 let expr='',deg=true,second=false,ans=0,lastRes='0',hist=[];
 try{hist=JSON.parse(localStorage.getItem('calc-h')||'[]')}catch(e){}
 if(hist.length)ans=hist[0].v;
 const $=s=>document.querySelector(s);
+const L={
+it:{nav:['Semplice','Scientifica','Grafico','Statistiche','Elementi','Convertitore'],hist:'Cronologia',addf:'+ Aggiungi funzione',conv:['Lunghezze','Masse','Temperature','Aree','Volumi','Velocità','Valute'],cup:'Aggiorna tassi',upd:'Tassi BCE del',ind:'Tassi indicativi: premi “Aggiorna tassi” (serve internet)',wait:'Aggiornamento…',fail:'Impossibile aggiornare: controlla la connessione.',clr2:'Svuota',close:'Chiudi',none:'Nessun calcolo ancora.',deg:'Gradi',rad:'Radianti',err:'Errore',g1:'Grafico',g2:'Tabella',hint:'Tocca il grafico per leggere i valori',from:'Da x =',step:'passo',colv:'Valore x<sub>i</sub>',coln:'Frequenza n<sub>i</sub>',add:'+ Riga',clr:'Cancella',sempty:'Inserisci i valori e le frequenze',
+ note:'Quartili: posizioni ⌈N/4⌉ e ⌈3N/4⌉ (programma francese). σ = deviazione standard della popolazione.',
+ stat:['Numero di dati (N)','Minimo','Massimo','Campo di variazione','Media','Deviazione standard σ','Varianza','Primo quartile Q<sub>1</sub>','Terzo quartile Q<sub>3</sub>','Mediana','Scarto interquartile','Somma'],
+ card:['Numero atomico','Numero di massa','Protoni','Neutroni','Nucleoni','Massa molare','Configurazione elettronica','Famiglia','Periodo · Gruppo'],
+ cats:['Non metalli','Gas nobili','Metalli alcalini','Metalli alcalino-terrosi','Semimetalli','Alogeni','Metalli di transizione','Lantanidi','Attinidi','Altri metalli']},
+fr:{nav:['Simple','Scientifique','Graphique','Statistiques','Éléments','Convertisseur'],hist:'Historique',addf:'+ Ajouter une fonction',conv:['Longueurs','Masses','Températures','Aires','Volumes','Vitesses','Devises'],cup:'Mettre à jour les taux',upd:'Taux BCE du',ind:'Taux indicatifs : appuyez sur « Mettre à jour les taux » (internet requis)',wait:'Mise à jour…',fail:'Mise à jour impossible : vérifiez la connexion.',clr2:'Vider',close:'Fermer',none:'Aucun calcul pour l’instant.',deg:'Degrés',rad:'Radians',err:'Erreur',g1:'Graphique',g2:'Tableau',hint:'Touchez le graphique pour lire les valeurs',from:'De x =',step:'pas',colv:'Valeur x<sub>i</sub>',coln:'Effectif n<sub>i</sub>',add:'+ Ligne',clr:'Effacer',sempty:'Entrez les valeurs et les effectifs',
+ note:'Quartiles : rangs ⌈N/4⌉ et ⌈3N/4⌉ (programme français). σ = écart type de la population.',
+ stat:['Effectif total','Minimum','Maximum','Étendue','Moyenne','Écart type σ','Variance','Premier quartile Q<sub>1</sub>','Troisième quartile Q<sub>3</sub>','Médiane','Écart interquartile','Somme'],
+ card:['Numéro atomique','Numéro de masse','Protons','Neutrons','Nucléons','Masse molaire','Configuration électronique','Famille','Période · Groupe'],
+ cats:['Non-métaux','Gaz nobles','Métaux alcalins','Métaux alcalino-terreux','Métalloïdes','Halogènes','Métaux de transition','Lanthanides','Actinides','Métaux pauvres']}};
+let lang='it';try{lang=localStorage.getItem('calc-l')||((navigator.language||'').slice(0,2)==='fr'?'fr':'it')}catch(e){}
+const _=k=>L[lang][k];
 
 // [etichetta, etichetta 2nd, testo, testo 2nd, classe]
 const KS=[
@@ -138,7 +169,7 @@ function press(k){
 function paint(){
   K.forEach(k=>{k.b.textContent=second&&k[1]?k[1]:k[0]});
   if(K===KS){K[0].b.classList.toggle('on',second);K[1].b.textContent=deg?'DEG':'RAD'}
-  $('#mode').textContent=deg?'Gradi':'Radianti';
+  $('#mode').textContent=deg?_('deg'):_('rad');
 }
 function upd(){
   $('#ex').textContent=expr;$('#ex').scrollTop=1e5;
@@ -153,7 +184,7 @@ function eq(){
     hist.unshift({e:expr,r:lastRes,v});hist=hist.slice(0,40);save();
     $('#ex').textContent=expr+' =';expr='';
     const rs=$('#rs');rs.textContent=lastRes;rs.className='';
-  }catch(e){const rs=$('#rs');rs.textContent='Errore';rs.className='dim'}
+  }catch(e){const rs=$('#rs');rs.textContent=_('err');rs.className='dim'}
 }
 function save(){try{localStorage.setItem('calc-h',JSON.stringify(hist))}catch(e){}}
 
@@ -247,7 +278,7 @@ function run(t,X){
 // cronologia
 function showHist(){
   const l=$('#hl');l.innerHTML='';
-  if(!hist.length){l.innerHTML='<p>Nessun calcolo ancora.</p>'}
+  if(!hist.length){l.innerHTML='<p>'+_('none')+'</p>'}
   hist.forEach(h=>{const d=document.createElement('div');d.innerHTML='<small></small><b></b>';d.children[0].textContent=h.e;d.children[1].textContent='= '+h.r;
     d.onclick=()=>{expr=h.e;$('#hp').classList.remove('show');upd()};l.appendChild(d)});
   $('#hp').classList.add('show');
@@ -257,17 +288,29 @@ $('#hx').onclick=()=>$('#hp').classList.remove('show');
 $('#hc').onclick=()=>{hist=[];save();showHist()};
 
 // grafico
-const cv=$('#cv'),g=cv.getContext('2d'),COL=['#ffb454','#6ee7b7','#ff6f91'];
-let vw={x:0,y:0,s:40},tx=null,lf=0,T=[null,null,null];
-let saved=['sin(x)','x^2/4-1',''];
-try{const q=JSON.parse(localStorage.getItem('calc-g'));if(Array.isArray(q)&&q.length===3)saved=q}catch(e){}
-const I=[0,1,2].map(i=>{const r=document.createElement('div');r.className='fr';r.innerHTML='<i></i><input autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="f'+(i+1)+'(x)">';r.firstChild.style.background=COL[i];$('#fi').appendChild(r);
-  const el=r.lastChild;el.value=saved[i];el.onfocus=()=>lf=i;el.oninput=inp;return el});
+const cv=$('#cv'),g=cv.getContext('2d');
+let vw={x:0,y:0,s:40},tx=null,lf=0,T=[],COL=[];
+const PAL=['#ffb454','#6ee7b7','#ff6f91','#7cc4ff','#c792ea','#f5e663','#ff9e64','#8ad0c2'];
+let saved=[{v:'sin(x)',c:PAL[0]},{v:'x^2/4-1',c:PAL[1]}];
+try{const q=JSON.parse(localStorage.getItem('calc-g2'));if(Array.isArray(q)&&q.length)saved=q}catch(e){}
+const I=[],CI=[];
+function addF(v,c,focus){
+  const r=document.createElement('div');r.className='fr';
+  r.innerHTML='<input type="color" class="cp"><input autocapitalize="off" autocomplete="off" spellcheck="false"><button class="rm">×</button>';
+  const cp=r.children[0],el=r.children[1],rm=r.children[2];
+  cp.value=c;el.value=v;el.onfocus=()=>lf=I.indexOf(el);el.oninput=inp;cp.oninput=inp;
+  rm.onclick=()=>{const j=I.indexOf(el);I.splice(j,1);CI.splice(j,1);r.remove();lf=Math.max(0,Math.min(lf,I.length-1));relabel();inp()};
+  $('#fi').appendChild(r);I.push(el);CI.push(cp);relabel();if(focus)el.focus();
+}
+const relabel=()=>I.forEach((el,i)=>el.placeholder='f'+(i+1)+'(x)');
+saved.forEach(f=>addF(f.v,f.c));
+$('#af').onclick=()=>{addF('',PAL.find(c=>!CI.some(x=>x.value.toLowerCase()===c))||PAL[0],true);inp()};
 ['x','^','(',')','π','√(','abs(','sin(','cos(','tan(','ln(','log(','e'].forEach(t=>{const b=document.createElement('button');b.textContent=t==='abs('?'|x|':t;b.onmousedown=e=>e.preventDefault();b.onclick=()=>ins(t);$('#qk').appendChild(b)});
-function ins(t){const el=I[lf],a=el.selectionStart==null?el.value.length:el.selectionStart,b=el.selectionEnd==null?a:el.selectionEnd;el.value=el.value.slice(0,a)+t+el.value.slice(b);el.setSelectionRange(a+t.length,a+t.length);el.focus();inp()}
+function ins(t){if(!I[lf])return;const el=I[lf],a=el.selectionStart==null?el.value.length:el.selectionStart,b=el.selectionEnd==null?a:el.selectionEnd;el.value=el.value.slice(0,a)+t+el.value.slice(b);el.setSelectionRange(a+t.length,a+t.length);el.focus();inp()}
 function inp(){
-  I.forEach((el,i)=>{let ok=true;T[i]=null;if(el.value.trim()){try{T[i]=tok(el.value)}catch(e){ok=false}}el.style.borderColor=ok?'':'var(--ac)'});
-  try{localStorage.setItem('calc-g',JSON.stringify(I.map(e=>e.value)))}catch(e){}
+  T=[];COL=[];
+  I.forEach((el,i)=>{let ok=true,tk=null;if(el.value.trim()){try{tk=tok(el.value)}catch(e){ok=false}}el.style.borderColor=ok?'':'var(--ac)';T.push(tk);COL.push(CI[i].value)});
+  try{localStorage.setItem('calc-g2',JSON.stringify(I.map((e,i)=>({v:e.value,c:CI[i].value}))))}catch(e){}
   draw();tbl();
 }
 function ev(i,x){const sv=deg;deg=false;try{const y=run(T[i],x);return isFinite(y)?y:null}catch(e){return null}finally{deg=sv}}
@@ -295,7 +338,7 @@ function draw(){
       if(pv===null||Math.abs(py-pv)>4*h)g.moveTo(px,py);else g.lineTo(px,py);pv=py}
     g.stroke()});
   const rd=$('#rd');
-  if(tx===null){rd.textContent='Tocca il grafico per leggere i valori';return}
+  if(tx===null){rd.textContent=_('hint');return}
   g.lineWidth=1;g.strokeStyle='#f4f1ff';g.setLineDash([4,4]);g.beginPath();g.moveTo(sx(tx),0);g.lineTo(sx(tx),h);g.stroke();g.setLineDash([]);
   let o='x = '+nf(tx);
   T.forEach((t,i)=>{if(!t)return;const y=ev(i,tx);o+='   y'+(i+1)+' = '+(y===null?'—':nf(y));
@@ -321,17 +364,17 @@ $('#zo').onclick=()=>{zoom(1/1.4,{x:W()/2,y:H()/2});draw()};
 $('#zr').onclick=()=>{vw={x:0,y:0,s:40};tx=null;draw()};
 addEventListener('resize',()=>{if($('#gr').classList.contains('show'))size()});
 // modalità
-const MD=[['b','Semplice'],['s','Scientifica'],['g','Grafico'],['t','Statistiche'],['e','Elementi']];
+const MD=[['b','Semplice'],['s','Scientifica'],['g','Grafico'],['t','Statistiche'],['e','Elementi'],['c','Convertitore']];
 MD.forEach(([k,n])=>{const b=document.createElement('button');b.textContent=n;b.id='m'+k;b.onclick=()=>setMode(k);$('#nv').appendChild(b)});
 let cur='s',eb=0;
 function setMode(m){
   cur=m;const c=m==='b'||m==='s';second=false;
   $('#calc').style.display=c?'flex':'none';
-  $('#gr').classList.toggle('show',m==='g');$('#st').classList.toggle('show',m==='t');$('#el').classList.toggle('show',m==='e');
+  $('#gr').classList.toggle('show',m==='g');$('#st').classList.toggle('show',m==='t');$('#el').classList.toggle('show',m==='e');$('#cn').classList.toggle('show',m==='c');
   MD.forEach(([k])=>$('#m'+k).classList.toggle('on',k===m));
   $('#hb').style.visibility=c?'':'hidden';$('#mode').style.visibility=m==='s'?'':'hidden';
   if(c){K=m==='b'?KB:KS;buildKeys();upd()}
-  if(m==='g'){inp();size()}if(m==='t')sdraw();if(m==='e')ebuild();
+  if(m==='g'){inp();size()}if(m==='t')sdraw();if(m==='e')ebuild();if(m==='c')cbuild();
   try{localStorage.setItem('calc-m',m)}catch(e){}
 }
 // grafico: tabella di valori
@@ -356,22 +399,22 @@ function sdraw(){
   try{localStorage.setItem('calc-s',JSON.stringify(SD))}catch(e){}
   const c=$('#sv'),k=c.getContext('2d'),dp=devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight,o=$('#ss');
   if(!w)return;c.width=w*dp;c.height=h*dp;k.setTransform(dp,0,0,dp,0,0);
-  if(!d.length){o.innerHTML='';k.fillStyle='#9a94c9';k.font='14px sans-serif';k.textAlign='center';k.fillText('Entrez les valeurs et les effectifs',w/2,h/2);return}
+  if(!d.length){o.innerHTML='';k.fillStyle='#9a94c9';k.font='14px sans-serif';k.textAlign='center';k.fillText(_('sempty'),w/2,h/2);return}
   const N=d.reduce((a,r)=>a+r[1],0),S=d.reduce((a,r)=>a+r[0]*r[1],0),m=S/N,V=d.reduce((a,r)=>a+r[1]*(r[0]-m)**2,0)/N;
   const at=q=>{let t=0;for(const r of d){t+=r[1];if(t>=q-1e-9)return r[0]}return d[d.length-1][0]};
   const q1=at(Math.ceil(N/4)),q3=at(Math.ceil(3*N/4)),med=N%2?at((N+1)/2):(at(N/2)+at(N/2+1))/2,mn=d[0][0],mx=d[d.length-1][0];
-  const R=[['Effectif total',N],['Minimum',mn],['Maximum',mx],['Étendue',mx-mn],['Moyenne',m],['Écart type σ',Math.sqrt(V)],['Variance',V],['Premier quartile Q<sub>1</sub>',q1],['Troisième quartile Q<sub>3</sub>',q3],['Médiane',med],['Écart interquartile',q3-q1],['Somme',S]];
+  const SL=_('stat'),R=[N,mn,mx,mx-mn,m,Math.sqrt(V),V,q1,q3,med,q3-q1,S].map((v,i)=>[SL[i],v]);
   const top=Math.max(...d.map(r=>r[1])),sl=(w-30)/d.length,bw=Math.min(46,sl*.7);
   k.textAlign='center';k.font='11px sans-serif';
   d.forEach((r,i)=>{const bh=(h-46)*r[1]/top,x=15+sl*i+sl/2;k.fillStyle='#5b4bb8';k.fillRect(x-bw/2,h-22-bh,bw,bh);k.fillStyle='#f4f1ff';k.fillText(nf(r[1]),x,h-26-bh);k.fillStyle='#9a94c9';k.fillText(nf(r[0]),x,h-8)});
-  o.innerHTML='<table class="dt">'+R.map(x=>'<tr><td style="color:var(--dim)">'+x[0]+'</td><td>'+nf(x[1])+'</td></tr>').join('')+'</table><p class="nt">Quartiles : rangs ⌈N/4⌉ et ⌈3N/4⌉ (programme français). σ = écart type de la population.</p>';
+  o.innerHTML='<table class="dt">'+R.map(x=>'<tr><td style="color:var(--dim)">'+x[0]+'</td><td>'+nf(x[1])+'</td></tr>').join('')+'</table><p class="nt">'+_('note')+'</p>';
 }
 addEventListener('resize',()=>{if(cur==='t')sdraw()});
 // elementi
 const EN='Hydrogène,Hélium,Lithium,Béryllium,Bore,Carbone,Azote,Oxygène,Fluor,Néon,Sodium,Magnésium,Aluminium,Silicium,Phosphore,Soufre,Chlore,Argon,Potassium,Calcium,Scandium,Titane,Vanadium,Chrome,Manganèse,Fer,Cobalt,Nickel,Cuivre,Zinc,Gallium,Germanium,Arsenic,Sélénium,Brome,Krypton,Rubidium,Strontium,Yttrium,Zirconium,Niobium,Molybdène,Technétium,Ruthénium,Rhodium,Palladium,Argent,Cadmium,Indium,Étain,Antimoine,Tellure,Iode,Xénon,Césium,Baryum,Lanthane,Cérium,Praséodyme,Néodyme,Prométhium,Samarium,Europium,Gadolinium,Terbium,Dysprosium,Holmium,Erbium,Thulium,Ytterbium,Lutécium,Hafnium,Tantale,Tungstène,Rhénium,Osmium,Iridium,Platine,Or,Mercure,Thallium,Plomb,Bismuth,Polonium,Astate,Radon,Francium,Radium,Actinium,Thorium,Protactinium,Uranium,Neptunium,Plutonium,Américium,Curium,Berkélium,Californium,Einsteinium,Fermium,Mendélévium,Nobélium,Lawrencium,Rutherfordium,Dubnium,Seaborgium,Bohrium,Hassium,Meitnérium,Darmstadtium,Roentgenium,Copernicium,Nihonium,Flérovium,Moscovium,Livermorium,Tennesse,Oganesson'.split(',');
 const ES='H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og'.split(' ');
 const EM=[1.008,4.0026,6.94,9.0122,10.81,12.011,14.007,15.999,18.998,20.18,22.99,24.305,26.982,28.085,30.974,32.06,35.45,39.948,39.098,40.078,44.956,47.867,50.942,51.996,54.938,55.845,58.933,58.693,63.546,65.38,69.723,72.63,74.922,78.971,79.904,83.798,85.468,87.62,88.906,91.224,92.906,95.95,98,101.07,102.91,106.42,107.87,112.41,114.82,118.71,121.76,127.6,126.9,131.29,132.91,137.33,138.91,140.12,140.91,144.24,145,150.36,151.96,157.25,158.93,162.5,164.93,167.26,168.93,173.05,174.97,178.49,180.95,183.84,186.21,190.23,192.22,195.08,196.97,200.59,204.38,207.2,208.98,209,210,222,223,226,227,232.04,231.04,238.03,237,244,243,247,247,251,252,257,258,259,266,267,268,269,270,277,278,281,282,285,286,289,290,293,294,294];
-const CATS=['Non-métaux','Gaz nobles','Métaux alcalins','Métaux alcalino-terreux','Métalloïdes','Halogènes','Métaux de transition','Lanthanides','Actinides','Métaux pauvres'];
+const NI='Idrogeno,Elio,Litio,Berillio,Boro,Carbonio,Azoto,Ossigeno,Fluoro,Neon,Sodio,Magnesio,Alluminio,Silicio,Fosforo,Zolfo,Cloro,Argon,Potassio,Calcio,Scandio,Titanio,Vanadio,Cromo,Manganese,Ferro,Cobalto,Nichel,Rame,Zinco,Gallio,Germanio,Arsenico,Selenio,Bromo,Kripton,Rubidio,Stronzio,Ittrio,Zirconio,Niobio,Molibdeno,Tecnezio,Rutenio,Rodio,Palladio,Argento,Cadmio,Indio,Stagno,Antimonio,Tellurio,Iodio,Xeno,Cesio,Bario,Lantanio,Cerio,Praseodimio,Neodimio,Promezio,Samario,Europio,Gadolinio,Terbio,Disprosio,Olmio,Erbio,Tulio,Itterbio,Lutezio,Afnio,Tantalio,Tungsteno,Renio,Osmio,Iridio,Platino,Oro,Mercurio,Tallio,Piombo,Bismuto,Polonio,Astato,Radon,Francio,Radio,Attinio,Torio,Protoattinio,Uranio,Nettunio,Plutonio,Americio,Curio,Berkelio,Californio,Einsteinio,Fermio,Mendelevio,Nobelio,Laurenzio,Rutherfordio,Dubnio,Seaborgio,Bohrio,Hassio,Meitnerio,Darmstadtio,Roentgenio,Copernicio,Nihonio,Flerovio,Moscovio,Livermorio,Tennessinio,Oganesson'.split(',');
 const CC=['#4aa3df','#b57bee','#ff7a7a','#ffb454','#6ee7b7','#f5e663','#9aa7ff','#ff9ed2','#d98e6b','#8ad0c2'];
 const IN=(a,z)=>a.includes(z);
 function cat(z){
@@ -389,20 +432,75 @@ function cfgRaw(z){const o={};let r=z;for(const k of ORD){const c=Math.min(r,CAP
 const cfg=z=>cfgRaw(z).map(([k,n])=>k+'<sup>'+n+'</sup>').join(' ');
 function ebuild(){
   if(eb)return;eb=1;const g=$('#eg');
-  for(let z=1;z<=118;z++){const[r,c]=pos(z),b=document.createElement('button');b.style.gridRow=r;b.style.gridColumn=c;b.style.background=CC[cat(z)];b.innerHTML=ES[z-1]+'<small>'+z+'</small>';b.onclick=()=>card(z);g.appendChild(b)}
-  $('#lg').innerHTML=CATS.map((n,i)=>'<span><i style="background:'+CC[i]+'"></i>'+n+'</span>').join('');
+  for(let z=1;z<=118;z++){const[r,c]=pos(z),b=document.createElement('button');b.style.gridRow=r;b.style.gridColumn=c;b.style.background=CC[cat(z)];b.innerHTML='<b>'+ES[z-1]+'</b><i class="z">'+z+'</i><i class="a">'+Math.round(EM[z-1])+'</i>';b.onclick=()=>card(z);g.appendChild(b)}
+  
 }
 function card(z){
   const i=z-1,M=EM[i],A=Math.round(M),[r,c]=pos(z),k=cat(z);
-  const R=[['Numéro atomique',z],['Numéro de masse',A],['Protons',z],['Neutrons',A-z],['Nucléons',A],['Masse molaire',String(M).replace('.',',')+' g·mol<sup>−1</sup>'],['Configuration électronique',cfg(z)],['Famille',CATS[k]]];
-  if(r<=7)R.push(['Période · Groupe',r+' · '+c]);
-  $('#ek').innerHTML='<div class="eh"><div style="background:'+CC[k]+'">'+ES[i]+'</div><span>'+EN[i]+'</span></div><table class="dt">'+R.map(x=>'<tr><td style="color:var(--dim)">'+x[0]+'</td><td>'+x[1]+'</td></tr>').join('')+'</table><button id="ex" class="bt">Fermer</button>';
-  $('#ex').onclick=()=>$('#ec').classList.remove('show');$('#ec').classList.add('show');
+  const CL=_('card'),R=[z,A,z,A-z,A,String(M).replace('.',',')+' g·mol<sup>−1</sup>',cfg(z)].map((v,j)=>[CL[j],v]);lastZ=z;
+  $('#ek').innerHTML='<div class="eh"><div style="background:'+CC[k]+'"><b>'+ES[i]+'</b><i class="z">'+z+'</i><i class="a">'+A+'</i></div><span>'+(lang==='it'?NI:EN)[i]+'</span></div><table class="dt">'+R.map(x=>'<tr><td style="color:var(--dim)">'+x[0]+'</td><td>'+x[1]+'</td></tr>').join('')+'</table><button id="ecl" class="bt">'+_('close')+'</button>';
+  $('#ecl').onclick=()=>$('#ec').classList.remove('show');$('#ec').classList.add('show');
 }
 $('#ec').onclick=e=>{if(e.target.id==='ec')$('#ec').classList.remove('show')};
 
+// convertitore
+const CU=[
+[['m',1],['km',1e3],['cm',.01],['mm',.001],['mi',1609.344],['yd',.9144],['ft',.3048],['in',.0254]],
+[['kg',1],['g',.001],['mg',1e-6],['t',1e3],['lb',.45359237],['oz',.028349523125]],
+[['°C'],['°F'],['K']],
+[['m²',1],['km²',1e6],['cm²',1e-4],['ha',1e4],['acre',4046.8564224],['ft²',.09290304],['yd²',.83612736],['mi²',2589988.110336]],
+[['L',1],['mL',.001],['cL',.01],['m³',1e3],['gal US',3.785411784],['gal UK',4.54609],['fl oz',.0295735295625]],
+[['m/s',1],['km/h',1/3.6],['mph',.44704],['kn',1852/3600],['ft/s',.3048]],[]];
+let RT={EUR:1,USD:1.16,GBP:.87,CHF:.93,JPY:170,CAD:1.6,AUD:1.78,CNY:8.3,INR:100,PLN:4.25},RD='',cc=0;
+try{const q=JSON.parse(localStorage.getItem('calc-r'));if(q&&q.r){RT=q.r;RD=q.d}}catch(e){}
+const cunits=()=>cc===6?Object.keys(RT).map(k=>[k]):CU[cc];
+const cfmt=v=>{if(v===0)return '0';const a=Math.abs(v);return a>=1e15||a<1e-6?v.toExponential(6):v.toLocaleString(lang==='fr'?'fr-FR':'it-IT',{maximumSignificantDigits:10})};
+function cbuild(){
+  const cb=$('#cc');cb.innerHTML='';
+  _('conv').forEach((n,i)=>{const b=document.createElement('button');b.textContent=n;b.className=i===cc?'on':'';b.onclick=()=>{cc=i;cbuild()};cb.appendChild(b)});
+  const o=cunits().map((u,i)=>'<option value="'+i+'">'+u[0]+'</option>').join('');
+  $('#cfa').innerHTML=o;$('#cft').innerHTML=o;$('#cft').value=1;
+  $('#cup').style.display=$('#cnt').style.display=cc===6?'':'none';
+  cconv();
+  if(cc===6&&navigator.onLine&&RD!==new Date().toISOString().slice(0,10))rup();
+}
+function cconv(){
+  const v=parseFloat($('#cvv').value.replace(',','.')),U=cunits(),a=+$('#cfa').value,b=+$('#cft').value;
+  if(isNaN(v)){$('#cr').textContent='';return}
+  let r;
+  if(cc===2){const k=a===0?v+273.15:a===1?(v-32)*5/9+273.15:v;r=b===0?k-273.15:b===1?(k-273.15)*9/5+32:k}
+  else if(cc===6)r=v/RT[U[a][0]]*RT[U[b][0]];
+  else r=v*U[a][1]/U[b][1];
+  $('#cr').textContent=cfmt(r)+' '+U[b][0];
+  if(cc===6)$('#cnt').textContent=RD?_('upd')+' '+RD:_('ind');
+}
+async function rup(){
+  $('#cnt').textContent=_('wait');
+  for(const u of ['https://api.frankfurter.dev/v1/latest?base=EUR','https://api.frankfurter.app/latest?from=EUR']){
+    try{const j=await(await fetch(u)).json();
+      if(j&&j.rates){Object.keys(RT).forEach(k=>{if(j.rates[k])RT[k]=j.rates[k]});RT.EUR=1;RD=j.date||'';try{localStorage.setItem('calc-r',JSON.stringify({r:RT,d:RD}))}catch(e){}cconv();return}}catch(e){}}
+  $('#cnt').textContent=_('fail');
+}
+$('#cvv').oninput=$('#cfa').onchange=$('#cft').onchange=cconv;
+$('#csw').onclick=()=>{const a=$('#cfa').value;$('#cfa').value=$('#cft').value;$('#cft').value=a;cconv()};
+$('#cup').onclick=rup;
+
 try{cur=localStorage.getItem('calc-m')||'s'}catch(e){}
 setMode(MD.some(x=>x[0]===cur)?cur:'s');
+let lastZ=0;
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i]').forEach(e=>e.innerHTML=_(e.dataset.i));
+  MD.forEach(([k],i)=>$('#m'+k).textContent=_('nav')[i]);
+  $('#lb').textContent=lang==='it'?'FR':'IT';
+  paint();if(tx===null)$('#rd').textContent=_('hint');
+  sdraw();
+  $('#lg').innerHTML=_('cats').map((n,i)=>'<span><i style="background:'+CC[i]+'"></i>'+n+'</span>').join('');
+  if($('#ec').classList.contains('show')&&lastZ)card(lastZ);
+  if(cur==='c')cbuild();
+}
+$('#lb').onclick=()=>{lang=lang==='it'?'fr':'it';try{localStorage.setItem('calc-l',lang)}catch(e){}applyLang()};
+applyLang();
 
 
 upd();
