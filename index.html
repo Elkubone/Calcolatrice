@@ -52,20 +52,49 @@ header .tabs button.on{background:var(--eq);color:#2a1d00}
 .fr input:focus{outline:0;border-color:var(--op)}
 #qk{display:flex;gap:6px;overflow-x:auto}
 #qk button{flex:none;border:0;border-radius:10px;background:var(--fn);color:var(--fnt);padding:9px 12px;font-size:16px;font-family:inherit}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 2px 0;flex:none}
+nav.tabs button{flex:none;border:0;background:var(--num);color:var(--fnt);border-radius:16px;padding:8px 14px;font-size:14px;font-family:inherit}
+nav.tabs button.on{background:var(--eq);color:#2a1d00}
+.keys.b{grid-template-columns:repeat(4,1fr)}.keys.b .eq{grid-column:span 1}.keys.b button{font-size:26px}
+.sg{display:flex;gap:6px;flex:none}.sg button{flex:1;border:0;border-radius:10px;background:var(--num);color:var(--fnt);padding:8px;font-size:14px;font-family:inherit}.sg button.on{background:var(--op);color:#fff}
+#gr.tab .cw,#gr.tab #rd,#gr.tab #qk{display:none}
+#tb{display:none;flex:1;flex-direction:column;min-height:0;gap:8px}#gr.tab #tb{display:flex}
+.tr{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--dim)}.tr input{width:80px;background:var(--num);color:var(--txt);border:0;border-radius:8px;padding:8px;font-size:16px}
+#tt{flex:1;overflow:auto}
+.dt{width:100%;border-collapse:collapse}.dt td,.dt th{padding:7px 8px;border-bottom:1px solid var(--fn);text-align:left;font-size:15px}.dt th{color:var(--dim);font-weight:500}
+.dt input{width:100%;background:var(--num);color:var(--txt);border:0;border-radius:8px;padding:9px;font-size:16px;font-family:inherit}
+#st,#el{display:none;flex:1;min-height:0;overflow:auto;padding-top:8px}#st.show,#el.show{display:block}
+.row{display:flex;gap:8px;margin:8px 0}.bt,.row button{border:0;border-radius:10px;background:var(--fn);color:var(--fnt);padding:9px 14px;font-size:14px;font-family:inherit}
+#sv{width:100%;height:190px;background:#14122a;border-radius:14px;margin-bottom:8px}.nt{font-size:12px;color:var(--dim)}
+#eg{display:grid;grid-template-columns:repeat(18,42px);grid-template-rows:repeat(7,42px) 12px repeat(2,42px);gap:3px;width:max-content}
+#eg button{border:0;border-radius:6px;color:#14122a;font-size:14px;font-weight:700;padding:0;font-family:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+#eg small{font-size:9px;font-weight:400}
+#lg{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0 4px;font-size:12px;color:var(--dim)}#lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}
+#ec{position:fixed;inset:0;background:rgba(10,8,25,.85);display:none;align-items:center;justify-content:center;padding:16px}#ec.show{display:flex}
+#ek{background:var(--bg);border:1px solid var(--fn);border-radius:18px;padding:18px;width:100%;max-width:400px;max-height:92dvh;overflow:auto}
+.eh{display:flex;align-items:center;gap:14px;margin-bottom:10px;font-size:24px}.eh div{color:#14122a;border-radius:12px;width:68px;height:68px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700}
+#ek .bt{margin-top:14px;width:100%}
 </style>
 </head>
 <body>
-<header><span class="tabs"><button id="t1" class="on">Calcola</button><button id="t2">Grafico</button></span><span id="mode">Gradi</span><button id="hb">Cronologia</button></header>
+<nav class="tabs" id="nv"></nav>
+<header><span id="mode">Gradi</span><button id="hb">Cronologia</button></header>
 <div id="calc">
 <div class="screen"><div id="ex"></div><div id="rs" class="dim">0</div></div>
 <div class="keys" id="keys"></div>
 </div>
 <div id="gr">
+<div class="sg"><button id="g1" class="on">Grafico</button><button id="g2">Tabella</button></div>
 <div class="cw"><canvas id="cv"></canvas><div class="zb"><button id="zi">+</button><button id="zo">−</button><button id="zr">⌂</button></div></div>
 <div id="rd">Tocca il grafico per leggere i valori</div>
 <div id="qk"></div>
+<div id="tb"><div class="tr">Da x = <input id="t0" type="number" step="any" value="-3"> passo <input id="ts" type="number" step="any" value="1"></div><div id="tt"></div></div>
 <div id="fi"></div>
 </div>
+<div id="st"><table class="dt" id="sd"><thead><tr><th>Valeur x<sub>i</sub></th><th>Effectif n<sub>i</sub></th></tr></thead><tbody></tbody></table>
+<div class="row"><button id="sa">+ Ligne</button><button id="sr">Effacer</button></div><canvas id="sv"></canvas><div id="ss"></div></div>
+<div id="el"><div id="eg"></div><div id="lg"></div></div>
+<div id="ec"><div id="ek"></div></div>
 <div id="hp"><div class="bar"><b>Cronologia</b><span><button class="t" id="hc">Svuota</button> <button class="t" id="hx">Chiudi</button></span></div><div id="hl"></div></div>
 <script>
 let expr='',deg=true,second=false,ans=0,lastRes='0',hist=[];
@@ -74,7 +103,7 @@ if(hist.length)ans=hist[0].v;
 const $=s=>document.querySelector(s);
 
 // [etichetta, etichetta 2nd, testo, testo 2nd, classe]
-const K=[
+const KS=[
 ['2nd','','#2nd','','fn'],['DEG','','#deg','','fn'],['(','','(','','fn'],[')','',')','','fn'],['⌫','','#bs','','fn'],
 ['sin','sin⁻¹','sin(','asin(','fn'],['cos','cos⁻¹','cos(','acos(','fn'],['tan','tan⁻¹','tan(','atan(','fn'],['π','','π','','fn'],['e','','e','','fn'],
 ['ln','eˣ','ln(','e^(','fn'],['log','10ˣ','log(','10^(','fn'],['√','∛','√(','∛(','fn'],['x²','x³','^2','^3','fn'],['xʸ','x⁻¹','^','^(-1)','fn'],
@@ -84,8 +113,12 @@ const K=[
 ['1','','1'],['2','','2'],['3','','3'],['−','','−','','op'],['EXP','','×10^','','fn'],
 ['0','','0'],['.','','.'],['+','','+','','op'],['=','','#eq','','eq']
 ];
-const kb=$('#keys');
-K.forEach((k,i)=>{const b=document.createElement('button');b.textContent=k[0];if(k[4])b.className=k[4];b.onclick=()=>press(k);k.b=b;kb.appendChild(b)});
+const kb=$('#keys');let K=KS;
+const KB=[['AC','','#ac','','ac'],['(','','(','','fn'],[')','',')','','fn'],['÷','','÷','','op'],
+['7','','7'],['8','','8'],['9','','9'],['×','','×','','op'],['4','','4'],['5','','5'],['6','','6'],['−','','−','','op'],
+['1','','1'],['2','','2'],['3','','3'],['+','','+','','op'],['0','','0'],['.','','.'],['⌫','','#bs','','fn'],['=','','#eq','','eq']];
+function buildKeys(){kb.innerHTML='';kb.className='keys'+(K===KB?' b':'');
+  K.forEach(k=>{const b=document.createElement('button');b.textContent=k[0];if(k[4])b.className=k[4];b.onclick=()=>press(k);k.b=b;kb.appendChild(b)});paint()}
 
 function press(k){
   navigator.vibrate&&navigator.vibrate(8);
@@ -104,8 +137,7 @@ function press(k){
 }
 function paint(){
   K.forEach(k=>{k.b.textContent=second&&k[1]?k[1]:k[0]});
-  K[0].b.classList.toggle('on',second);
-  K[1].b.textContent=deg?'DEG':'RAD';
+  if(K===KS){K[0].b.classList.toggle('on',second);K[1].b.textContent=deg?'DEG':'RAD'}
   $('#mode').textContent=deg?'Gradi':'Radianti';
 }
 function upd(){
@@ -236,9 +268,9 @@ function ins(t){const el=I[lf],a=el.selectionStart==null?el.value.length:el.sele
 function inp(){
   I.forEach((el,i)=>{let ok=true;T[i]=null;if(el.value.trim()){try{T[i]=tok(el.value)}catch(e){ok=false}}el.style.borderColor=ok?'':'var(--ac)'});
   try{localStorage.setItem('calc-g',JSON.stringify(I.map(e=>e.value)))}catch(e){}
-  draw();
+  draw();tbl();
 }
-function ev(i,x){try{const y=run(T[i],x);return isFinite(y)?y:null}catch(e){return null}}
+function ev(i,x){const sv=deg;deg=false;try{const y=run(T[i],x);return isFinite(y)?y:null}catch(e){return null}finally{deg=sv}}
 function size(){const r=cv.getBoundingClientRect(),d=devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;g.setTransform(d,0,0,d,0,0);draw()}
 const W=()=>cv.clientWidth,H=()=>cv.clientHeight;
 const sx=x=>W()/2+(x-vw.x)*vw.s,sy=y=>H()/2-(y-vw.y)*vw.s,ix=p=>(p-W()/2)/vw.s+vw.x,iy=p=>vw.y-(p-H()/2)/vw.s;
@@ -288,15 +320,92 @@ $('#zi').onclick=()=>{zoom(1.4,{x:W()/2,y:H()/2});draw()};
 $('#zo').onclick=()=>{zoom(1/1.4,{x:W()/2,y:H()/2});draw()};
 $('#zr').onclick=()=>{vw={x:0,y:0,s:40};tx=null;draw()};
 addEventListener('resize',()=>{if($('#gr').classList.contains('show'))size()});
-function tab(gr){
-  $('#gr').classList.toggle('show',gr);$('#calc').style.display=gr?'none':'flex';
-  $('#t1').classList.toggle('on',!gr);$('#t2').classList.toggle('on',gr);
-  $('#hb').style.visibility=$('#mode').style.visibility=gr?'hidden':'';
-  if(gr){inp();size()}
+// modalità
+const MD=[['b','Semplice'],['s','Scientifica'],['g','Grafico'],['t','Statistiche'],['e','Elementi']];
+MD.forEach(([k,n])=>{const b=document.createElement('button');b.textContent=n;b.id='m'+k;b.onclick=()=>setMode(k);$('#nv').appendChild(b)});
+let cur='s',eb=0;
+function setMode(m){
+  cur=m;const c=m==='b'||m==='s';second=false;
+  $('#calc').style.display=c?'flex':'none';
+  $('#gr').classList.toggle('show',m==='g');$('#st').classList.toggle('show',m==='t');$('#el').classList.toggle('show',m==='e');
+  MD.forEach(([k])=>$('#m'+k).classList.toggle('on',k===m));
+  $('#hb').style.visibility=c?'':'hidden';$('#mode').style.visibility=m==='s'?'':'hidden';
+  if(c){K=m==='b'?KB:KS;buildKeys();upd()}
+  if(m==='g'){inp();size()}if(m==='t')sdraw();if(m==='e')ebuild();
+  try{localStorage.setItem('calc-m',m)}catch(e){}
 }
-$('#t1').onclick=()=>tab(false);$('#t2').onclick=()=>tab(true);
+// grafico: tabella di valori
+function tbl(){
+  const a=parseFloat($('#t0').value)||0,s=parseFloat($('#ts').value)||1;
+  let h='<table class="dt"><tr><th>x</th>'+T.map((t,i)=>t?'<th style="color:'+COL[i]+'">f'+(i+1)+'(x)</th>':'').join('')+'</tr>';
+  for(let i=0;i<60;i++){const x=Number((a+i*s).toPrecision(12));h+='<tr><td>'+nf(x)+'</td>'+T.map((t,j)=>{if(!t)return '';const y=ev(j,x);return '<td>'+(y===null?'—':nf(y))+'</td>'}).join('')+'</tr>'}
+  $('#tt').innerHTML=h+'</table>';
+}
+$('#t0').oninput=$('#ts').oninput=tbl;
+$('#g1').onclick=()=>{$('#gr').classList.remove('tab');$('#g1').classList.add('on');$('#g2').classList.remove('on');size()};
+$('#g2').onclick=()=>{$('#gr').classList.add('tab');$('#g2').classList.add('on');$('#g1').classList.remove('on');tbl()};
+// statistiche
+let SD=Array.from({length:5},()=>['','']);
+try{const q=JSON.parse(localStorage.getItem('calc-s'));if(Array.isArray(q)&&q.length)SD=q}catch(e){}
+function srows(){const tb=$('#sd tbody');tb.innerHTML='';SD.forEach((r,i)=>{const tr=document.createElement('tr');[0,1].forEach(c=>{const td=document.createElement('td'),n=document.createElement('input');n.type='number';n.step='any';n.inputMode='decimal';n.value=r[c];n.oninput=()=>{SD[i][c]=n.value===''?'':+n.value;sdraw()};td.appendChild(n);tr.appendChild(td)});tb.appendChild(tr)})}
+$('#sa').onclick=()=>{SD.push(['','']);srows()};
+$('#sr').onclick=()=>{SD=Array.from({length:5},()=>['','']);srows();sdraw()};
+srows();
+function sdraw(){
+  const d=SD.filter(r=>r[0]!==''&&r[1]!==''&&r[1]>0).map(r=>[+r[0],+r[1]]).sort((a,b)=>a[0]-b[0]);
+  try{localStorage.setItem('calc-s',JSON.stringify(SD))}catch(e){}
+  const c=$('#sv'),k=c.getContext('2d'),dp=devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight,o=$('#ss');
+  if(!w)return;c.width=w*dp;c.height=h*dp;k.setTransform(dp,0,0,dp,0,0);
+  if(!d.length){o.innerHTML='';k.fillStyle='#9a94c9';k.font='14px sans-serif';k.textAlign='center';k.fillText('Entrez les valeurs et les effectifs',w/2,h/2);return}
+  const N=d.reduce((a,r)=>a+r[1],0),S=d.reduce((a,r)=>a+r[0]*r[1],0),m=S/N,V=d.reduce((a,r)=>a+r[1]*(r[0]-m)**2,0)/N;
+  const at=q=>{let t=0;for(const r of d){t+=r[1];if(t>=q-1e-9)return r[0]}return d[d.length-1][0]};
+  const q1=at(Math.ceil(N/4)),q3=at(Math.ceil(3*N/4)),med=N%2?at((N+1)/2):(at(N/2)+at(N/2+1))/2,mn=d[0][0],mx=d[d.length-1][0];
+  const R=[['Effectif total',N],['Minimum',mn],['Maximum',mx],['Étendue',mx-mn],['Moyenne',m],['Écart type σ',Math.sqrt(V)],['Variance',V],['Premier quartile Q<sub>1</sub>',q1],['Troisième quartile Q<sub>3</sub>',q3],['Médiane',med],['Écart interquartile',q3-q1],['Somme',S]];
+  const top=Math.max(...d.map(r=>r[1])),sl=(w-30)/d.length,bw=Math.min(46,sl*.7);
+  k.textAlign='center';k.font='11px sans-serif';
+  d.forEach((r,i)=>{const bh=(h-46)*r[1]/top,x=15+sl*i+sl/2;k.fillStyle='#5b4bb8';k.fillRect(x-bw/2,h-22-bh,bw,bh);k.fillStyle='#f4f1ff';k.fillText(nf(r[1]),x,h-26-bh);k.fillStyle='#9a94c9';k.fillText(nf(r[0]),x,h-8)});
+  o.innerHTML='<table class="dt">'+R.map(x=>'<tr><td style="color:var(--dim)">'+x[0]+'</td><td>'+nf(x[1])+'</td></tr>').join('')+'</table><p class="nt">Quartiles : rangs ⌈N/4⌉ et ⌈3N/4⌉ (programme français). σ = écart type de la population.</p>';
+}
+addEventListener('resize',()=>{if(cur==='t')sdraw()});
+// elementi
+const EN='Hydrogène,Hélium,Lithium,Béryllium,Bore,Carbone,Azote,Oxygène,Fluor,Néon,Sodium,Magnésium,Aluminium,Silicium,Phosphore,Soufre,Chlore,Argon,Potassium,Calcium,Scandium,Titane,Vanadium,Chrome,Manganèse,Fer,Cobalt,Nickel,Cuivre,Zinc,Gallium,Germanium,Arsenic,Sélénium,Brome,Krypton,Rubidium,Strontium,Yttrium,Zirconium,Niobium,Molybdène,Technétium,Ruthénium,Rhodium,Palladium,Argent,Cadmium,Indium,Étain,Antimoine,Tellure,Iode,Xénon,Césium,Baryum,Lanthane,Cérium,Praséodyme,Néodyme,Prométhium,Samarium,Europium,Gadolinium,Terbium,Dysprosium,Holmium,Erbium,Thulium,Ytterbium,Lutécium,Hafnium,Tantale,Tungstène,Rhénium,Osmium,Iridium,Platine,Or,Mercure,Thallium,Plomb,Bismuth,Polonium,Astate,Radon,Francium,Radium,Actinium,Thorium,Protactinium,Uranium,Neptunium,Plutonium,Américium,Curium,Berkélium,Californium,Einsteinium,Fermium,Mendélévium,Nobélium,Lawrencium,Rutherfordium,Dubnium,Seaborgium,Bohrium,Hassium,Meitnérium,Darmstadtium,Roentgenium,Copernicium,Nihonium,Flérovium,Moscovium,Livermorium,Tennesse,Oganesson'.split(',');
+const ES='H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og'.split(' ');
+const EM=[1.008,4.0026,6.94,9.0122,10.81,12.011,14.007,15.999,18.998,20.18,22.99,24.305,26.982,28.085,30.974,32.06,35.45,39.948,39.098,40.078,44.956,47.867,50.942,51.996,54.938,55.845,58.933,58.693,63.546,65.38,69.723,72.63,74.922,78.971,79.904,83.798,85.468,87.62,88.906,91.224,92.906,95.95,98,101.07,102.91,106.42,107.87,112.41,114.82,118.71,121.76,127.6,126.9,131.29,132.91,137.33,138.91,140.12,140.91,144.24,145,150.36,151.96,157.25,158.93,162.5,164.93,167.26,168.93,173.05,174.97,178.49,180.95,183.84,186.21,190.23,192.22,195.08,196.97,200.59,204.38,207.2,208.98,209,210,222,223,226,227,232.04,231.04,238.03,237,244,243,247,247,251,252,257,258,259,266,267,268,269,270,277,278,281,282,285,286,289,290,293,294,294];
+const CATS=['Non-métaux','Gaz nobles','Métaux alcalins','Métaux alcalino-terreux','Métalloïdes','Halogènes','Métaux de transition','Lanthanides','Actinides','Métaux pauvres'];
+const CC=['#4aa3df','#b57bee','#ff7a7a','#ffb454','#6ee7b7','#f5e663','#9aa7ff','#ff9ed2','#d98e6b','#8ad0c2'];
+const IN=(a,z)=>a.includes(z);
+function cat(z){
+  if(IN([2,10,18,36,54,86,118],z))return 1;if(IN([3,11,19,37,55,87],z))return 2;if(IN([4,12,20,38,56,88],z))return 3;
+  if(IN([5,14,32,33,51,52],z))return 4;if(IN([9,17,35,53,85,117],z))return 5;if(IN([1,6,7,8,15,16,34],z))return 0;
+  if(z>=57&&z<=71)return 7;if(z>=89&&z<=103)return 8;if(IN([13,31,49,50,81,82,83,84,113,114,115,116],z))return 9;return 6}
+function pos(z){
+  if(z===1)return[1,1];if(z===2)return[1,18];if(z<=4)return[2,z-2];if(z<=10)return[2,z+8];if(z<=12)return[3,z-10];if(z<=18)return[3,z];
+  if(z<=36)return[4,z-18];if(z<=54)return[5,z-36];if(z<=56)return[6,z-54];if(z<=71)return[9,z-54];if(z<=86)return[6,z-68];
+  if(z<=88)return[7,z-86];if(z<=103)return[10,z-86];return[7,z-100]}
+const ORD='1s 2s 2p 3s 3p 4s 3d 4p 5s 4d 5p 6s 4f 5d 6p 7s 5f 6d 7p'.split(' '),CAP={s:2,p:6,d:10,f:14};
+const EX={24:{'4s':1,'3d':5},29:{'4s':1,'3d':10},41:{'5s':1,'4d':4},42:{'5s':1,'4d':5},44:{'5s':1,'4d':7},45:{'5s':1,'4d':8},46:{'5s':0,'4d':10},47:{'5s':1,'4d':10},57:{'4f':0,'5d':1},58:{'4f':1,'5d':1},64:{'4f':7,'5d':1},78:{'6s':1,'5d':9},79:{'6s':1,'5d':10},89:{'5f':0,'6d':1},90:{'5f':0,'6d':2},91:{'5f':2,'6d':1},92:{'5f':3,'6d':1},93:{'5f':4,'6d':1},96:{'5f':7,'6d':1},103:{'5f':14,'6d':0,'7p':1}};
+function cfgRaw(z){const o={};let r=z;for(const k of ORD){const c=Math.min(r,CAP[k[1]]);o[k]=c;r-=c;if(r<=0)break}Object.assign(o,EX[z]||{});
+  return Object.keys(o).filter(k=>o[k]>0).sort((a,b)=>a[0]-b[0]||'spdf'.indexOf(a[1])-'spdf'.indexOf(b[1])).map(k=>[k,o[k]])}
+const cfg=z=>cfgRaw(z).map(([k,n])=>k+'<sup>'+n+'</sup>').join(' ');
+function ebuild(){
+  if(eb)return;eb=1;const g=$('#eg');
+  for(let z=1;z<=118;z++){const[r,c]=pos(z),b=document.createElement('button');b.style.gridRow=r;b.style.gridColumn=c;b.style.background=CC[cat(z)];b.innerHTML=ES[z-1]+'<small>'+z+'</small>';b.onclick=()=>card(z);g.appendChild(b)}
+  $('#lg').innerHTML=CATS.map((n,i)=>'<span><i style="background:'+CC[i]+'"></i>'+n+'</span>').join('');
+}
+function card(z){
+  const i=z-1,M=EM[i],A=Math.round(M),[r,c]=pos(z),k=cat(z);
+  const R=[['Numéro atomique',z],['Numéro de masse',A],['Protons',z],['Neutrons',A-z],['Nucléons',A],['Masse molaire',String(M).replace('.',',')+' g·mol<sup>−1</sup>'],['Configuration électronique',cfg(z)],['Famille',CATS[k]]];
+  if(r<=7)R.push(['Période · Groupe',r+' · '+c]);
+  $('#ek').innerHTML='<div class="eh"><div style="background:'+CC[k]+'">'+ES[i]+'</div><span>'+EN[i]+'</span></div><table class="dt">'+R.map(x=>'<tr><td style="color:var(--dim)">'+x[0]+'</td><td>'+x[1]+'</td></tr>').join('')+'</table><button id="ex" class="bt">Fermer</button>';
+  $('#ex').onclick=()=>$('#ec').classList.remove('show');$('#ec').classList.add('show');
+}
+$('#ec').onclick=e=>{if(e.target.id==='ec')$('#ec').classList.remove('show')};
 
-paint();upd();
+try{cur=localStorage.getItem('calc-m')||'s'}catch(e){}
+setMode(MD.some(x=>x[0]===cur)?cur:'s');
+
+
+upd();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
