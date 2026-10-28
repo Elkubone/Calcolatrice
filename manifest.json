@@ -1,8 +1,8 @@
 {
   "id": "/calcolatrice/",
-  "name": "Calcolatrice scientifica",
-  "short_name": "Calcolatrice",
-  "description": "Calcolatrice scientifica per il liceo",
+  "name": "Kubocalc",
+  "short_name": "Kubocalc",
+  "description": "Kubocalc: calcolatrice scientifica, grafici, statistiche, elementi e convertitore",
   "lang": "it",
   "start_url": "./",
   "scope": "./",
